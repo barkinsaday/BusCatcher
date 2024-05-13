@@ -87,6 +87,7 @@ def API(clone_path, owner, repo_name, github_token, method_id):
     branch_name = "main"
     # clone_path = "clone" + "_" + github_repo.name + "_" + branch_name
     branch = utils.clone_repo_branch(github_repo, branch_name)
+    branches = [branch.name for branch in github_repo.get_branches()]
 
     # Get Python Files to Blame
     files_to_blame = utils.find_code_files(clone_path)
@@ -130,18 +131,18 @@ def API(clone_path, owner, repo_name, github_token, method_id):
 
     bus_factor = get_Bus_Factor(normalized_scores)
 
-    print("Primary Author List: ", total_prim)
-    print("Secondary Author List:", total_second)
-    print("Total Number of Lines: ", total_num_of_lines)
-    print("Total number of Contributors: ", number_of_contributers)
-    print("Normalized Score: ", normalized_scores)  # Clustered Data
-    print("Bus Factor Cluster Data: ", bus_factor)
-    print("Bus Factor Number: ", len(bus_factor))
+    response_data = {
+        "total_lines": total_num_of_lines,
+        "total_contributors": number_of_contributers,
+        "bus_factor_data": bus_factor,
+        "bus_factor_count": len(bus_factor),
+        "files_analyzed": files_to_blame,
+        "branches": branches,
+        "method": method_id
+    }
+    return response_data
 
-    for file in files_to_blame:
-        print("============================== "+file+" ==============================")
-        print("Local Prim: ", local_prim[file])
-        print("Local Second", local_second[file])
+
 
 
 '''
